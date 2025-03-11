@@ -1,0 +1,114 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Gestión de Promociones</h2>
+    
+    <!-- Botón para agregar nueva promoción -->
+    <div class="mb-4">
+        <a href="{{ url_for('admin.add_promotion') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nueva Promoción
+        </a>
+    </div>
+
+    <!-- Tabla de promociones -->
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Descuento</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for promotion in promotions %}
+                <tr>
+                    <td>{{ promotion.id }}</td>
+                    <td>{{ promotion.title }}</td>
+                    <td>{{ promotion.description }}</td>
+                    <td>{{ promotion.discount }}%</td>
+                    <td>{{ promotion.start_date.strftime('%Y-%m-%d') }}</td>
+                    <td>{{ promotion.end_date.strftime('%Y-%m-%d') }}</td>
+                    <td>
+                        {% if promotion.is_active %}
+                        <span class="badge bg-success">Activa</span>
+                        {% else %}
+                        <span class="badge bg-danger">Inactiva</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_promotion', id=promotion.id) }}" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button class="btn btn-sm btn-danger" onclick="deletePromotion('{{ promotion.id }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Está seguro que desea eliminar esta promoción?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let promotionIdToDelete = null;
+
+    function deletePromotion(id) {
+        promotionIdToDelete = id;
+        const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+        modal.show();
+    }
+
+    document.getElementById('confirmDelete').addEventListener('click', function() {
+        if (promotionIdToDelete) {
+            fetch(`/admin/promotion/${promotionIdToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert('Error al eliminar la promoción');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al eliminar la promoción');
+            });
+        }
+    });
+</script>
+{% endblock %}

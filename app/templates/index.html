@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}La Cuchara - Inicio{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h1 class="display-4 mb-4">Bienvenido a La Cuchara de Andy</h1>
+            
+            <!-- Barra de búsqueda -->
+            <div class="search-container mb-5">
+                <form action="{{ url_for('customer.search') }}" method="GET" class="form-inline justify-content-center">
+                    <div class="input-group w-75">
+                        <input type="text" name="q" class="form-control form-control-lg" 
+                               placeholder="Buscar restaurantes, platos..." 
+                               aria-label="Búsqueda">
+                        <button class="btn btn-primary" type="submit">
+                            Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

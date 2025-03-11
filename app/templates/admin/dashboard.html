@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="{{ url_for('admin.index') }}">Inicio</a></li>
+                <li><a href="{{ url_for('admin.users') }}">Usuarios</a></li>
+                <li><a href="{{ url_for('admin.settings') }}">Configuración</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <header>
+                <h1>Bienvenido al Panel de Administración</h1>
+                <div class="user-info">
+                    <span>{{ current_user.username }}</span>
+                    <a href="{{ url_for('auth.logout') }}" class="logout-btn">Cerrar Sesión</a>
+                </div>
+            </header>
+
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Usuarios</h3>
+                    <p>{{ stats.total_users }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Usuarios Activos</h3>
+                    <p>{{ stats.active_users }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Nuevos Hoy</h3>
+                    <p>{{ stats.new_users_today }}</p>
+                </div>
+            </div>
+
+            {% block content %}
+            {% endblock %}
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

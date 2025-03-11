@@ -1,0 +1,9 @@
+# Archivos de configuración con credenciales
+.env
+
+# Entornos virtuales
+venv/
+__pycache__/
+*.pyc
+*.pyo
+

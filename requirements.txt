@@ -1,0 +1,13 @@
+flask==2.3.3
+pymongo==4.5.0
+azure-cosmos==4.5.1
+azure-storage-blob==12.17.0
+azure-search-documents==11.4.0
+azure-identity==1.14.0
+python-dotenv==1.0.0
+pdfminer.six==20221105
+flask-wtf==1.1.1
+wtforms==3.0.1
+Pillow>=10.1.0
+flask-login==0.6.2
+gunicorn==21.2.0

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}La Cuchara - Resultados de Búsqueda{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Barra de búsqueda -->
+    <div class="search-container mb-4">
+        <form action="{{ url_for('customer.search') }}" method="GET" class="form-inline justify-content-center">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" 
+                       value="{{ query }}"
+                       placeholder="Buscar restaurantes, platos..." 
+                       aria-label="Búsqueda">
+                <button class="btn btn-primary" type="submit">
+                    Buscar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    {% if query %}
+        <h2 class="mb-4">Resultados para "{{ query }}"</h2>
+        
+        {% if results %}
+            <div class="row">
+                {% for result in results %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                {% if result.type == 'restaurant' %}
+                                    <h5 class="card-title">
+                                        <i class="fas fa-utensils me-2"></i>
+                                        {{ result.name }}
+                                    </h5>
+                                    {% if result.cuisine %}
+                                        <p class="card-text"><small class="text-muted">{{ result.cuisine }}</small></p>
+                                    {% endif %}
+                                    <p class="card-text">{{ result.description }}</p>
+                                    <a href="{{ url_for('customer.restaurant_profile', restaurant_id=result._id) }}" 
+                                       class="btn btn-primary">Ver restaurante</a>
+                                {% else %}
+                                    <h5 class="card-title">
+                                        <i class="fas fa-hamburger me-2"></i>
+                                        {{ result.name }}
+                                    </h5>
+                                    <p class="card-text">{{ result.description }}</p>
+                                    <a href="{{ url_for('customer.dish_profile', dish_id=result._id) }}" 
+                                       class="btn btn-primary">Ver plato</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted">No se encontraron resultados para tu búsqueda.</p>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

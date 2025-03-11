@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ restaurant.name }} - La Cuchara{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% if restaurant %}
+        <div class="row">
+            <div class="col-md-8">
+                <h1 class="mb-4">{{ restaurant.name }}</h1>
+                <p class="lead">{{ restaurant.description }}</p>
+                
+                {% if restaurant.cuisine %}
+                    <p><strong>Cocina:</strong> {{ restaurant.cuisine }}</p>
+                {% endif %}
+                
+                {% if restaurant.address %}
+                    <p><strong>Dirección:</strong> {{ restaurant.address }}</p>
+                {% endif %}
+                
+                {% if restaurant.phone %}
+                    <p><strong>Teléfono:</strong> {{ restaurant.phone }}</p>
+                {% endif %}
+            </div>
+            
+            {% if restaurant.menu_items %}
+                <div class="col-md-12 mt-4">
+                    <h2>Menú</h2>
+                    <div class="row">
+                        {% for item in restaurant.menu_items %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ item.name }}</h5>
+                                        <p class="card-text">{{ item.description }}</p>
+                                        <p class="card-text">
+                                            <strong>Precio:</strong> {{ item.price }}€
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            Restaurante no encontrado.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
