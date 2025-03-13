@@ -57,5 +57,14 @@
             <p class="text-muted">No se encontraron resultados para tu búsqueda.</p>
         {% endif %}
     {% endif %}
+
+    <!-- Mostrar nombres de restaurantes -->
+    <h5>Restaurantes disponibles:</h5>
+    <ul>
+        {% for restaurant_pdf in all_restaurants %}
+            {% set restaurant_name = restaurant_pdf.split('/')[-1][:-4] %}  {# Eliminar la carpeta y '.pdf' del nombre #}
+            <li>{{ restaurant_name }}</li>
+        {% endfor %}
+    </ul>
 </div>
 {% endblock %}

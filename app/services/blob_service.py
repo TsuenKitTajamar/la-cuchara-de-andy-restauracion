@@ -86,3 +86,20 @@ def delete_pdf(blob_url):
     blob_client.delete_blob()
     
     return True
+
+def list_pdf_files():
+    """List all PDF files in the Azure Blob Storage container."""
+    blob_service = get_blob_service()
+    container_name = current_app.config['AZURE_STORAGE_CONTAINER_NAME']
+    container_client = blob_service.get_container_client(container_name)
+    
+    pdf_files = []
+    try:
+        blobs = container_client.list_blobs()
+        for blob in blobs:
+            if blob.name.endswith('.pdf'):
+                pdf_files.append(blob.name)
+    except Exception as e:
+        current_app.logger.error(f"Error listing PDF files: {str(e)}")
+    
+    return pdf_files

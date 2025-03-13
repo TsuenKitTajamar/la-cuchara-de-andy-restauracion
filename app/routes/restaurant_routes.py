@@ -4,7 +4,7 @@ from app.services.db_service import (
     get_restaurant_menus, create_menu, get_restaurant_dishes, create_dish,
     get_active_promotions
 )
-from app.services.blob_service import upload_pdf
+from app.services.blob_service import upload_pdf, list_pdf_files
 from app.services.pdf_service import extract_menu_from_pdf
 from app.services.search_service import index_restaurant, index_menu, index_dish
 from datetime import datetime
@@ -16,7 +16,18 @@ restaurant_bp = Blueprint('restaurant', __name__, url_prefix='/restaurant')
 @restaurant_bp.route('/')
 def index():
     """Restaurant dashboard landing page."""
-    return render_template('restaurant/dashboard.html')
+    # Obtener la lista de archivos PDF de los restaurantes
+    restaurant_pdfs = list_pdf_files()
+    
+    # Paginación
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    total = len(restaurant_pdfs)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pdf_files_paginated = restaurant_pdfs[start:end]
+    
+    return render_template('restaurant/dashboard.html', restaurant_pdfs=pdf_files_paginated, total=total, page=page, per_page=per_page)
 
 @restaurant_bp.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -265,6 +276,15 @@ def analytics():
     
     return render_template('restaurant/analytics.html', restaurant=restaurant)
 
+@restaurant_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    """Página de inicio de sesión del restaurante."""
+    if request.method == 'POST':
+        # Lógica de autenticación aquí
+        pass  # Reemplaza esto con tu lógica de autenticación
+
+    return render_template('restaurant/login.html')  # Asegúrate de tener esta plantilla
+
 # API endpoints for AJAX calls
 @restaurant_bp.route('/api/dishes', methods=['GET'])
 def api_dishes():
@@ -276,3 +296,10 @@ def api_dishes():
     
     dishes = get_restaurant_dishes(restaurant_id)
     return jsonify({'dishes': dishes})
+
+@restaurant_bp.route('/<restaurant_name>/menu')
+def view_menu(restaurant_name):
+    """Mostrar el menú de un restaurante específico."""
+    # Aquí puedes implementar la lógica para obtener el menú del restaurante
+    # usando el nombre del restaurante (restaurant_name).
+    return render_template('restaurant/menu.html', restaurant_name=restaurant_name)

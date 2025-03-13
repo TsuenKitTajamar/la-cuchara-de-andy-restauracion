@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from app import create_app
 import webbrowser
 from threading import Timer
@@ -8,7 +8,18 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html')
+    # Obtener la lista de archivos PDF de los restaurantes
+    restaurant_pdfs = list_pdf_files()
+    
+    # Paginación
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    total = len(restaurant_pdfs)
+    start = (page - 1) * per_page
+    end = start + per_page
+    pdf_files_paginated = restaurant_pdfs[start:end]
+    
+    return render_template('index.html', restaurant_pdfs=pdf_files_paginated, total=total, page=page, per_page=per_page)
 
 @app.route('/about')
 def about():
